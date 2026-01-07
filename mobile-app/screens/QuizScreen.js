@@ -9,9 +9,13 @@ import {
   Alert,
 } from 'react-native';
 import { quizData } from '../data/quizData';
+import { useProgress } from '../contexts/ProgressContext';
+import { useUser } from '../contexts/UserContext';
 
 export default function QuizScreen({ navigation, route }) {
   const { subject, subjectName } = route.params;
+  const { recordQuizResult } = useProgress();
+  const { incrementDailyGoal } = useUser();
   const [questions, setQuestions] = useState([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
@@ -60,18 +64,33 @@ export default function QuizScreen({ navigation, route }) {
     ]);
   };
 
-  const handleNextQuestion = () => {
+  const handleNextQuestion = async () => {
     if (currentQuestionIndex < questions.length - 1) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
       setSelectedAnswer(null);
       setShowExplanation(false);
     } else {
-      // Quiz terminé
+      // Quiz terminé - sauvegarder les résultats
+      const finalScore = score + (selectedAnswer === currentQuestion.correctAnswer ? 1 : 0);
+
+      // Sauvegarder le résultat du quiz
+      await recordQuizResult(subject, Date.now(), finalScore, questions.length);
+
+      // Incrémenter l'objectif du jour
+      await incrementDailyGoal();
+
+      // Naviguer vers les résultats
       navigation.navigate('Results', {
-        score,
+        score: finalScore,
         total: questions.length,
         subject: subjectName,
-        answers: answeredQuestions,
+        subjectId: subject,
+        answers: [...answeredQuestions, {
+          question: currentQuestion.question,
+          userAnswer: selectedAnswer,
+          correctAnswer: currentQuestion.correctAnswer,
+          isCorrect: selectedAnswer === currentQuestion.correctAnswer,
+        }],
       });
     }
   };

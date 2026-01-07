@@ -8,14 +8,26 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import { coursesData } from '../data/coursesData';
+import { useProgress } from '../contexts/ProgressContext';
+import { useUser } from '../contexts/UserContext';
 
 export default function CourseScreen({ navigation, route }) {
   const { subject, subjectName } = route.params;
   const courses = coursesData[subject] || [];
+  const { completeLesson, isLessonCompleted } = useProgress();
+  const { incrementDailyGoal } = useUser();
   const [expandedCourse, setExpandedCourse] = useState(null);
 
   const toggleCourse = (index) => {
     setExpandedCourse(expandedCourse === index ? null : index);
+  };
+
+  const handleMarkAsCompleted = async (lessonIndex) => {
+    const alreadyCompleted = isLessonCompleted(subject, lessonIndex);
+    if (!alreadyCompleted) {
+      await completeLesson(subject, lessonIndex);
+      await incrementDailyGoal();
+    }
   };
 
   return (
@@ -23,47 +35,76 @@ export default function CourseScreen({ navigation, route }) {
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <Text style={styles.subjectTitle}>{subjectName}</Text>
 
-        {courses.map((course, index) => (
-          <View key={index} style={styles.courseCard}>
-            <TouchableOpacity
-              style={styles.courseHeader}
-              onPress={() => toggleCourse(index)}
-            >
-              <Text style={styles.courseTitle}>{course.title}</Text>
-              <Text style={styles.expandIcon}>
-                {expandedCourse === index ? '▼' : '▶'}
-              </Text>
-            </TouchableOpacity>
+        {courses.map((course, index) => {
+          const completed = isLessonCompleted(subject, index);
 
-            {expandedCourse === index && (
-              <View style={styles.courseContent}>
-                <Text style={styles.courseText}>{course.content}</Text>
+          return (
+            <View key={index} style={styles.courseCard}>
+              <TouchableOpacity
+                style={styles.courseHeader}
+                onPress={() => toggleCourse(index)}
+              >
+                <View style={styles.courseTitleRow}>
+                  {completed && <Text style={styles.checkMark}>✓</Text>}
+                  <Text style={[styles.courseTitle, completed && styles.completedTitle]}>
+                    {course.title}
+                  </Text>
+                </View>
+                <Text style={styles.expandIcon}>
+                  {expandedCourse === index ? '▼' : '▶'}
+                </Text>
+              </TouchableOpacity>
 
-                {course.keyPoints && (
-                  <View style={styles.keyPointsContainer}>
-                    <Text style={styles.keyPointsTitle}>Points clés :</Text>
-                    {course.keyPoints.map((point, idx) => (
-                      <Text key={idx} style={styles.keyPoint}>
-                        • {point}
+              {expandedCourse === index && (
+                <View style={styles.courseContent}>
+                  <Text style={styles.courseText}>{course.content}</Text>
+
+                  {course.keyPoints && (
+                    <View style={styles.keyPointsContainer}>
+                      <Text style={styles.keyPointsTitle}>Points clés :</Text>
+                      {course.keyPoints.map((point, idx) => (
+                        <Text key={idx} style={styles.keyPoint}>
+                          • {point}
+                        </Text>
+                      ))}
+                    </View>
+                  )}
+
+                  {course.examples && (
+                    <View style={styles.examplesContainer}>
+                      <Text style={styles.examplesTitle}>Exemples :</Text>
+                      {course.examples.map((example, idx) => (
+                        <Text key={idx} style={styles.example}>
+                          {example}
+                        </Text>
+                      ))}
+                    </View>
+                  )}
+
+                  {/* Bouton "J'ai compris" */}
+                  {!completed && (
+                    <TouchableOpacity
+                      style={styles.completeButton}
+                      onPress={() => handleMarkAsCompleted(index)}
+                    >
+                      <Text style={styles.completeButtonText}>
+                        ✓ J'ai compris cette leçon
                       </Text>
-                    ))}
-                  </View>
-                )}
+                    </TouchableOpacity>
+                  )}
 
-                {course.examples && (
-                  <View style={styles.examplesContainer}>
-                    <Text style={styles.examplesTitle}>Exemples :</Text>
-                    {course.examples.map((example, idx) => (
-                      <Text key={idx} style={styles.example}>
-                        {example}
+                  {completed && (
+                    <View style={styles.completedBadge}>
+                      <Text style={styles.completedBadgeText}>
+                        ✓ Leçon complétée
                       </Text>
-                    ))}
-                  </View>
-                )}
-              </View>
-            )}
-          </View>
-        ))}
+                    </View>
+                  )}
+                </View>
+              )}
+            </View>
+          );
+        })}
 
         <TouchableOpacity
           style={styles.quizButton}
@@ -92,6 +133,46 @@ const styles = StyleSheet.create({
     color: '#2C3E50',
     marginBottom: 20,
     textAlign: 'center',
+  },
+  courseTitleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
+  },
+  checkMark: {
+    fontSize: 18,
+    color: '#27AE60',
+    marginRight: 8,
+    fontWeight: 'bold',
+  },
+  completedTitle: {
+    color: '#27AE60',
+  },
+  completeButton: {
+    backgroundColor: '#27AE60',
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+    marginTop: 15,
+    alignItems: 'center',
+  },
+  completeButtonText: {
+    color: '#fff',
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  completedBadge: {
+    backgroundColor: '#D4EDDA',
+    paddingVertical: 10,
+    paddingHorizontal: 16,
+    borderRadius: 8,
+    marginTop: 15,
+    alignItems: 'center',
+  },
+  completedBadgeText: {
+    color: '#27AE60',
+    fontSize: 14,
+    fontWeight: '600',
   },
   courseCard: {
     backgroundColor: '#fff',

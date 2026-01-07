@@ -43,7 +43,10 @@ export default function HomeScreen({ navigation }) {
             </Text>
             <Text style={styles.userName}>{user.name}</Text>
           </View>
-          <TouchableOpacity style={styles.avatarButton}>
+          <TouchableOpacity
+            style={styles.avatarButton}
+            onPress={() => navigation.navigate('Profile')}
+          >
             <Text style={styles.avatar}>{user.avatar}</Text>
           </TouchableOpacity>
         </View>

@@ -8,6 +8,8 @@ import SubjectsScreen from './screens/SubjectsScreen';
 import QuizScreen from './screens/QuizScreen';
 import ResultsScreen from './screens/ResultsScreen';
 import CourseScreen from './screens/CourseScreen';
+import ProfileScreen from './screens/ProfileScreen';
+import EditProfileScreen from './screens/EditProfileScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -52,6 +54,16 @@ export default function App() {
               name="Results"
               component={ResultsScreen}
               options={{ title: 'Résultats' }}
+            />
+            <Stack.Screen
+              name="Profile"
+              component={ProfileScreen}
+              options={{ title: 'Mon Profil' }}
+            />
+            <Stack.Screen
+              name="EditProfile"
+              component={EditProfileScreen}
+              options={{ title: 'Modifier le profil' }}
             />
           </Stack.Navigator>
         </NavigationContainer>
