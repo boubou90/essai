@@ -11,11 +11,13 @@ import {
 import { quizData } from '../data/quizData';
 import { useProgress } from '../contexts/ProgressContext';
 import { useUser } from '../contexts/UserContext';
+import { usePremium } from '../contexts/PremiumContext';
 
 export default function QuizScreen({ navigation, route }) {
   const { subject, subjectName } = route.params;
   const { recordQuizResult } = useProgress();
   const { incrementDailyGoal } = useUser();
+  const { isPremium, canAccessQuiz } = usePremium();
   const [questions, setQuestions] = useState([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
@@ -24,11 +26,31 @@ export default function QuizScreen({ navigation, route }) {
   const [showExplanation, setShowExplanation] = useState(false);
 
   useEffect(() => {
+    // Vérifier l'accès Premium
+    if (!canAccessQuiz()) {
+      Alert.alert(
+        'Quiz Premium 👑',
+        'Les quiz sont réservés aux membres Premium. Passe à Premium pour tester tes connaissances !',
+        [
+          {
+            text: 'Voir Premium',
+            onPress: () => navigation.replace('Premium')
+          },
+          {
+            text: 'Retour',
+            onPress: () => navigation.goBack(),
+            style: 'cancel'
+          },
+        ]
+      );
+      return;
+    }
+
     const subjectQuestions = quizData[subject] || [];
     // Mélanger les questions
     const shuffled = [...subjectQuestions].sort(() => Math.random() - 0.5);
     setQuestions(shuffled.slice(0, 10)); // Prendre 10 questions
-  }, [subject]);
+  }, [subject, isPremium]);
 
   if (questions.length === 0) {
     return (

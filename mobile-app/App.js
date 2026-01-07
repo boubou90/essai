@@ -3,6 +3,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { UserProvider } from './contexts/UserContext';
 import { ProgressProvider } from './contexts/ProgressContext';
+import { PremiumProvider } from './contexts/PremiumContext';
 import HomeScreen from './screens/HomeScreen';
 import SubjectsScreen from './screens/SubjectsScreen';
 import QuizScreen from './screens/QuizScreen';
@@ -10,6 +11,7 @@ import ResultsScreen from './screens/ResultsScreen';
 import CourseScreen from './screens/CourseScreen';
 import ProfileScreen from './screens/ProfileScreen';
 import EditProfileScreen from './screens/EditProfileScreen';
+import PremiumScreen from './screens/PremiumScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -17,7 +19,8 @@ export default function App() {
   return (
     <UserProvider>
       <ProgressProvider>
-        <NavigationContainer>
+        <PremiumProvider>
+          <NavigationContainer>
           <Stack.Navigator
             initialRouteName="Home"
             screenOptions={{
@@ -65,8 +68,14 @@ export default function App() {
               component={EditProfileScreen}
               options={{ title: 'Modifier le profil' }}
             />
+            <Stack.Screen
+              name="Premium"
+              component={PremiumScreen}
+              options={{ title: 'Premium' }}
+            />
           </Stack.Navigator>
         </NavigationContainer>
+        </PremiumProvider>
       </ProgressProvider>
     </UserProvider>
   );

@@ -14,12 +14,14 @@ import { captureRef } from 'react-native-view-shot';
 import * as Sharing from 'expo-sharing';
 import { useUser } from '../contexts/UserContext';
 import { useProgress } from '../contexts/ProgressContext';
+import { usePremium } from '../contexts/PremiumContext';
 import { COLORS, SPACING, CARD_STYLES, BADGES } from '../utils/constants';
 import ShareableProgressCard from '../components/ShareableProgressCard';
 
 export default function ProfileScreen({ navigation }) {
   const { user, gamification } = useUser();
   const { progress, getTotalLessonsRead, getTotalQuizCompleted } = useProgress();
+  const { isPremium } = usePremium();
 
   const shareCardRef = useRef();
   const [isSharing, setIsSharing] = useState(false);
@@ -113,6 +115,30 @@ export default function ProfileScreen({ navigation }) {
             </TouchableOpacity>
           </View>
         </View>
+
+        {/* Banner Premium */}
+        {!isPremium ? (
+          <TouchableOpacity
+            style={styles.premiumBanner}
+            onPress={() => navigation.navigate('Premium')}
+          >
+            <View style={styles.premiumBannerContent}>
+              <Text style={styles.premiumBannerIcon}>👑</Text>
+              <View style={styles.premiumBannerText}>
+                <Text style={styles.premiumBannerTitle}>Passe à Premium</Text>
+                <Text style={styles.premiumBannerSubtitle}>
+                  Tous les cours et quiz débloqués
+                </Text>
+              </View>
+              <Text style={styles.premiumBannerArrow}>→</Text>
+            </View>
+          </TouchableOpacity>
+        ) : (
+          <View style={styles.premiumActiveBanner}>
+            <Text style={styles.premiumActiveIcon}>👑</Text>
+            <Text style={styles.premiumActiveText}>Membre Premium</Text>
+          </View>
+        )}
 
         {/* Progression globale */}
         <View style={styles.section}>
@@ -395,6 +421,66 @@ const styles = StyleSheet.create({
     position: 'absolute',
     left: -9999,
     top: -9999,
+  },
+
+  // Premium Banner
+  premiumBanner: {
+    backgroundColor: '#FFD700',
+    marginHorizontal: SPACING.md,
+    marginTop: -SPACING.lg,
+    marginBottom: SPACING.md,
+    borderRadius: 12,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 5,
+  },
+  premiumBannerContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: SPACING.md,
+  },
+  premiumBannerIcon: {
+    fontSize: 32,
+    marginRight: SPACING.md,
+  },
+  premiumBannerText: {
+    flex: 1,
+  },
+  premiumBannerTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#000',
+    marginBottom: 2,
+  },
+  premiumBannerSubtitle: {
+    fontSize: 13,
+    color: '#333',
+  },
+  premiumBannerArrow: {
+    fontSize: 24,
+    color: '#000',
+  },
+  premiumActiveBanner: {
+    backgroundColor: COLORS.primary,
+    marginHorizontal: SPACING.md,
+    marginTop: -SPACING.lg,
+    marginBottom: SPACING.md,
+    borderRadius: 12,
+    padding: SPACING.md,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  premiumActiveIcon: {
+    fontSize: 24,
+    marginRight: SPACING.sm,
+  },
+  premiumActiveText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: COLORS.white,
   },
 
   // Sections

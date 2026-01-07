@@ -6,19 +6,39 @@ import {
   SafeAreaView,
   ScrollView,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
 import { coursesData } from '../data/coursesData';
 import { useProgress } from '../contexts/ProgressContext';
 import { useUser } from '../contexts/UserContext';
+import { usePremium } from '../contexts/PremiumContext';
 
 export default function CourseScreen({ navigation, route }) {
   const { subject, subjectName } = route.params;
   const courses = coursesData[subject] || [];
   const { completeLesson, isLessonCompleted } = useProgress();
   const { incrementDailyGoal } = useUser();
+  const { isPremium, canAccessLesson, FREE_LESSONS_LIMIT } = usePremium();
   const [expandedCourse, setExpandedCourse] = useState(null);
 
   const toggleCourse = (index) => {
+    const hasAccess = canAccessLesson(index);
+
+    if (!hasAccess) {
+      Alert.alert(
+        'Contenu Premium 👑',
+        `Les ${FREE_LESSONS_LIMIT} premiers cours sont gratuits. Passe à Premium pour débloquer tous les cours !`,
+        [
+          { text: 'Plus tard', style: 'cancel' },
+          {
+            text: 'Voir Premium',
+            onPress: () => navigation.navigate('Premium')
+          },
+        ]
+      );
+      return;
+    }
+
     setExpandedCourse(expandedCourse === index ? null : index);
   };
 
@@ -37,18 +57,33 @@ export default function CourseScreen({ navigation, route }) {
 
         {courses.map((course, index) => {
           const completed = isLessonCompleted(subject, index);
+          const hasAccess = canAccessLesson(index);
+          const isLocked = !hasAccess;
 
           return (
             <View key={index} style={styles.courseCard}>
               <TouchableOpacity
-                style={styles.courseHeader}
+                style={[
+                  styles.courseHeader,
+                  isLocked && styles.courseHeaderLocked
+                ]}
                 onPress={() => toggleCourse(index)}
               >
                 <View style={styles.courseTitleRow}>
                   {completed && <Text style={styles.checkMark}>✓</Text>}
-                  <Text style={[styles.courseTitle, completed && styles.completedTitle]}>
+                  {isLocked && <Text style={styles.lockIcon}>🔒</Text>}
+                  <Text style={[
+                    styles.courseTitle,
+                    completed && styles.completedTitle,
+                    isLocked && styles.lockedTitle
+                  ]}>
                     {course.title}
                   </Text>
+                  {isLocked && (
+                    <View style={styles.premiumBadge}>
+                      <Text style={styles.premiumBadgeText}>👑 Premium</Text>
+                    </View>
+                  )}
                 </View>
                 <Text style={styles.expandIcon}>
                   {expandedCourse === index ? '▼' : '▶'}
@@ -145,8 +180,30 @@ const styles = StyleSheet.create({
     marginRight: 8,
     fontWeight: 'bold',
   },
+  lockIcon: {
+    fontSize: 16,
+    marginRight: 8,
+  },
   completedTitle: {
     color: '#27AE60',
+  },
+  lockedTitle: {
+    opacity: 0.6,
+  },
+  premiumBadge: {
+    backgroundColor: '#FFD700',
+    paddingVertical: 4,
+    paddingHorizontal: 8,
+    borderRadius: 12,
+    marginLeft: 8,
+  },
+  premiumBadgeText: {
+    fontSize: 11,
+    fontWeight: 'bold',
+    color: '#000',
+  },
+  courseHeaderLocked: {
+    backgroundColor: '#95A5A6',
   },
   completeButton: {
     backgroundColor: '#27AE60',
