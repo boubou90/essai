@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useState } from 'react';
 import {
   View,
   Text,
@@ -7,20 +7,66 @@ import {
   SafeAreaView,
   ScrollView,
   StatusBar,
+  Alert,
+  ActivityIndicator,
 } from 'react-native';
+import { captureRef } from 'react-native-view-shot';
+import * as Sharing from 'expo-sharing';
 import { useUser } from '../contexts/UserContext';
 import { useProgress } from '../contexts/ProgressContext';
 import { COLORS, SPACING, CARD_STYLES, BADGES } from '../utils/constants';
+import ShareableProgressCard from '../components/ShareableProgressCard';
 
 export default function ProfileScreen({ navigation }) {
   const { user, gamification } = useUser();
   const { progress, getTotalLessonsRead, getTotalQuizCompleted } = useProgress();
+
+  const shareCardRef = useRef();
+  const [isSharing, setIsSharing] = useState(false);
 
   // Badges débloqués
   const unlockedBadges = gamification.unlockedBadges || [];
   const unlockedBadgesDetails = BADGES.filter(badge =>
     unlockedBadges.includes(badge.id)
   );
+
+  // Fonction de partage
+  const handleShare = async () => {
+    try {
+      setIsSharing(true);
+
+      // Vérifier si le partage est disponible
+      const isAvailable = await Sharing.isAvailableAsync();
+      if (!isAvailable) {
+        Alert.alert(
+          'Partage non disponible',
+          'Le partage n\'est pas disponible sur cet appareil.'
+        );
+        setIsSharing(false);
+        return;
+      }
+
+      // Capturer la carte de progression
+      const uri = await captureRef(shareCardRef, {
+        format: 'png',
+        quality: 1,
+      });
+
+      // Partager l'image
+      await Sharing.shareAsync(uri, {
+        mimeType: 'image/png',
+        dialogTitle: 'Partage ma progression !',
+      });
+    } catch (error) {
+      console.error('Erreur lors du partage:', error);
+      Alert.alert(
+        'Erreur',
+        'Impossible de partager ta progression. Réessaye plus tard.'
+      );
+    } finally {
+      setIsSharing(false);
+    }
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -43,12 +89,29 @@ export default function ProfileScreen({ navigation }) {
             </Text>
           )}
 
-          <TouchableOpacity
-            style={styles.editButton}
-            onPress={() => navigation.navigate('EditProfile')}
-          >
-            <Text style={styles.editButtonText}>Modifier le profil</Text>
-          </TouchableOpacity>
+          <View style={styles.buttonRow}>
+            <TouchableOpacity
+              style={styles.editButton}
+              onPress={() => navigation.navigate('EditProfile')}
+            >
+              <Text style={styles.editButtonText}>Modifier le profil</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.shareButton}
+              onPress={handleShare}
+              disabled={isSharing}
+            >
+              {isSharing ? (
+                <ActivityIndicator color={COLORS.white} size="small" />
+              ) : (
+                <>
+                  <Text style={styles.shareButtonIcon}>📤</Text>
+                  <Text style={styles.shareButtonText}>Partager</Text>
+                </>
+              )}
+            </TouchableOpacity>
+          </View>
         </View>
 
         {/* Progression globale */}
@@ -229,6 +292,21 @@ export default function ProfileScreen({ navigation }) {
 
         <View style={{ height: SPACING.xl }} />
       </ScrollView>
+
+      {/* Carte de partage invisible (pour la capture) */}
+      <View style={styles.shareCardContainer}>
+        <View ref={shareCardRef} collapsable={false}>
+          <ShareableProgressCard
+            user={user}
+            gamification={gamification}
+            progress={progress}
+            stats={{
+              lessonsRead: getTotalLessonsRead(),
+              quizCompleted: getTotalQuizCompleted(),
+            }}
+          />
+        </View>
+      </View>
     </SafeAreaView>
   );
 }
@@ -281,16 +359,42 @@ const styles = StyleSheet.create({
     color: 'rgba(255, 255, 255, 0.9)',
     marginBottom: SPACING.lg,
   },
+  buttonRow: {
+    flexDirection: 'row',
+    gap: SPACING.sm,
+  },
   editButton: {
     backgroundColor: 'rgba(255, 255, 255, 0.2)',
     paddingVertical: 10,
-    paddingHorizontal: 24,
+    paddingHorizontal: 20,
     borderRadius: 20,
   },
   editButtonText: {
     color: COLORS.white,
     fontSize: 14,
     fontWeight: '600',
+  },
+  shareButton: {
+    backgroundColor: 'rgba(255, 255, 255, 0.3)',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+  },
+  shareButtonIcon: {
+    fontSize: 16,
+  },
+  shareButtonText: {
+    color: COLORS.white,
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  shareCardContainer: {
+    position: 'absolute',
+    left: -9999,
+    top: -9999,
   },
 
   // Sections
