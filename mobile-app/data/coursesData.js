@@ -235,4 +235,80 @@ export const coursesData = {
       ],
     },
   ],
+
+  sciences: [
+    {
+      title: "Le corps humain",
+      content: "Le corps humain est composé de différents systèmes qui travaillent ensemble pour assurer notre survie.",
+      keyPoints: [
+        "Le squelette est composé de 206 os qui soutiennent le corps",
+        "Le cœur pompe le sang dans tout le corps",
+        "Les poumons permettent la respiration",
+        "Le cerveau contrôle toutes les fonctions du corps",
+      ],
+      examples: [
+        "Le cœur bat environ 100 000 fois par jour",
+        "Nous respirons environ 20 000 fois par jour",
+      ],
+    },
+    {
+      title: "Les états de la matière",
+      content: "La matière peut exister sous trois états principaux : solide, liquide et gazeux.",
+      keyPoints: [
+        "État solide : forme et volume fixes",
+        "État liquide : volume fixe mais forme variable",
+        "État gazeux : forme et volume variables",
+        "Les changements d'état dépendent de la température",
+      ],
+      examples: [
+        "Eau solide : glace (0°C et moins)",
+        "Eau liquide : eau (entre 0°C et 100°C)",
+        "Eau gazeuse : vapeur d'eau (100°C et plus)",
+      ],
+    },
+    {
+      title: "L'énergie",
+      content: "L'énergie est la capacité de produire un travail, de la chaleur ou de la lumière.",
+      keyPoints: [
+        "Énergies renouvelables : solaire, éolienne, hydraulique",
+        "Énergies non renouvelables : pétrole, charbon, gaz",
+        "L'énergie se transforme mais ne se crée ni ne se détruit",
+        "L'électricité est une forme d'énergie très utilisée",
+      ],
+      examples: [
+        "Panneau solaire : transforme l'énergie du soleil en électricité",
+        "Éolienne : transforme l'énergie du vent en électricité",
+      ],
+    },
+    {
+      title: "L'électricité",
+      content: "L'électricité est un flux d'électrons qui circule dans un circuit électrique.",
+      keyPoints: [
+        "Un circuit simple : générateur, fils, récepteur",
+        "Conducteurs : laissent passer le courant (métaux)",
+        "Isolants : ne laissent pas passer le courant (plastique, bois)",
+        "Tension (Volt) et Intensité (Ampère)",
+      ],
+      examples: [
+        "Une pile est un générateur de courant",
+        "Une ampoule est un récepteur",
+        "Le cuivre est un bon conducteur",
+      ],
+    },
+    {
+      title: "Le système solaire",
+      content: "Le système solaire est composé du Soleil et des objets célestes qui gravitent autour de lui.",
+      keyPoints: [
+        "8 planètes : Mercure, Vénus, Terre, Mars, Jupiter, Saturne, Uranus, Neptune",
+        "La Terre est la 3ème planète du système solaire",
+        "Le Soleil est une étoile qui produit lumière et chaleur",
+        "La Lune est le satellite naturel de la Terre",
+      ],
+      examples: [
+        "Jupiter est la plus grande planète",
+        "Mercure est la plus proche du Soleil",
+        "La Terre met 365 jours pour faire le tour du Soleil",
+      ],
+    },
+  ],
 };

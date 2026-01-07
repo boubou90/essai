@@ -283,4 +283,99 @@ export const quizData = {
       explanation: "Louis XIV (1638-1715) était surnommé le 'Roi-Soleil'. Il fit construire le château de Versailles et incarna la monarchie absolue.",
     },
   ],
+
+  sciences: [
+    {
+      question: "Combien d'os y a-t-il dans le corps humain adulte ?",
+      answers: ["156", "186", "206", "246"],
+      correctAnswer: 2,
+      explanation: "Le squelette humain adulte est composé de 206 os.",
+    },
+    {
+      question: "À quelle température l'eau bout-elle ?",
+      answers: ["0°C", "50°C", "100°C", "200°C"],
+      correctAnswer: 2,
+      explanation: "L'eau bout à 100°C au niveau de la mer (pression atmosphérique normale).",
+    },
+    {
+      question: "Quelle énergie est renouvelable ?",
+      answers: [
+        "Le pétrole",
+        "Le charbon",
+        "L'énergie solaire",
+        "Le gaz naturel",
+      ],
+      correctAnswer: 2,
+      explanation: "L'énergie solaire est renouvelable car le soleil brille continuellement. Les combustibles fossiles (pétrole, charbon, gaz) ne se renouvellent pas.",
+    },
+    {
+      question: "Quel est le rôle du cœur ?",
+      answers: [
+        "Filtrer l'air",
+        "Pomper le sang",
+        "Digérer les aliments",
+        "Produire de l'énergie",
+      ],
+      correctAnswer: 1,
+      explanation: "Le cœur est un muscle qui pompe le sang dans tout le corps pour apporter oxygène et nutriments aux organes.",
+    },
+    {
+      question: "Qu'est-ce qu'un conducteur électrique ?",
+      answers: [
+        "Un matériau qui bloque le courant",
+        "Un matériau qui laisse passer le courant",
+        "Un appareil électrique",
+        "Une source d'énergie",
+      ],
+      correctAnswer: 1,
+      explanation: "Un conducteur électrique est un matériau qui laisse passer le courant électrique, comme les métaux (cuivre, fer, aluminium).",
+    },
+    {
+      question: "Combien de planètes y a-t-il dans le système solaire ?",
+      answers: ["7", "8", "9", "10"],
+      correctAnswer: 1,
+      explanation: "Il y a 8 planètes dans le système solaire : Mercure, Vénus, Terre, Mars, Jupiter, Saturne, Uranus et Neptune. Pluton n'est plus considérée comme une planète depuis 2006.",
+    },
+    {
+      question: "Quel est l'état de l'eau à 0°C ?",
+      answers: ["Liquide", "Solide", "Gazeux", "Plasma"],
+      correctAnswer: 1,
+      explanation: "À 0°C, l'eau se solidifie et devient de la glace.",
+    },
+    {
+      question: "Quelle planète est la plus proche du Soleil ?",
+      answers: ["Vénus", "Mercure", "Mars", "Terre"],
+      correctAnswer: 1,
+      explanation: "Mercure est la planète la plus proche du Soleil.",
+    },
+    {
+      question: "Qu'est-ce qu'un isolant électrique ?",
+      answers: [
+        "Un matériau qui laisse passer le courant",
+        "Un matériau qui ne laisse pas passer le courant",
+        "Un appareil de mesure",
+        "Une source d'énergie",
+      ],
+      correctAnswer: 1,
+      explanation: "Un isolant électrique est un matériau qui ne laisse pas passer le courant, comme le plastique, le bois ou le verre.",
+    },
+    {
+      question: "Quel organe contrôle toutes les fonctions du corps ?",
+      answers: ["Le cœur", "Le cerveau", "Les poumons", "L'estomac"],
+      correctAnswer: 1,
+      explanation: "Le cerveau est l'organe qui contrôle toutes les fonctions du corps et permet de penser, mémoriser et bouger.",
+    },
+    {
+      question: "Quelle est la plus grande planète du système solaire ?",
+      answers: ["Saturne", "Neptune", "Jupiter", "Uranus"],
+      correctAnswer: 2,
+      explanation: "Jupiter est la plus grande planète du système solaire.",
+    },
+    {
+      question: "Combien de jours la Terre met-elle pour faire le tour du Soleil ?",
+      answers: ["30 jours", "180 jours", "365 jours", "500 jours"],
+      correctAnswer: 2,
+      explanation: "La Terre met 365 jours (une année) pour faire le tour complet du Soleil.",
+    },
+  ],
 };
