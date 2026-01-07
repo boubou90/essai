@@ -155,9 +155,9 @@ export default function PremiumScreen({ navigation }) {
           <View style={styles.pricingHeader}>
             <Text style={styles.pricingBadge}>OFFRE DE LANCEMENT</Text>
           </View>
-          <Text style={styles.price}>4,99€</Text>
-          <Text style={styles.pricePeriod}>par mois</Text>
-          <Text style={styles.priceNote}>Annule à tout moment</Text>
+          <Text style={styles.price}>1,99€</Text>
+          <Text style={styles.pricePeriod}>Paiement unique</Text>
+          <Text style={styles.priceNote}>À toi pour toujours</Text>
         </View>
 
         {/* Comparaison Gratuit vs Premium */}
@@ -229,7 +229,7 @@ export default function PremiumScreen({ navigation }) {
         {/* Note légale */}
         <Text style={styles.legalNote}>
           En continuant, tu acceptes nos conditions d'utilisation.
-          L'abonnement se renouvelle automatiquement jusqu'à annulation.
+          Achat unique, pas d'abonnement. Accès illimité à vie.
         </Text>
 
         <View style={{ height: SPACING.xl }} />
